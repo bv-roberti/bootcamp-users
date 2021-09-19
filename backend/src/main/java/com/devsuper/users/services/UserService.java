@@ -11,6 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,15 @@ public class UserService {
     List<ClientDTO> _listClientDto = new ArrayList<>();
 
     _userRepo.findAll().forEach(o -> _listClientDto.add(new ClientDTO(o)));
+
+    return _listClientDto;
+  }
+
+  @Transactional(readOnly = true)
+  public List<ClientDTO> findAllPaged(PageRequest page) {
+    List<ClientDTO> _listClientDto = new ArrayList<>();
+
+    _userRepo.findAll(page).forEach(o -> _listClientDto.add(new ClientDTO(o)));
 
     return _listClientDto;
   }

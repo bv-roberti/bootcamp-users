@@ -6,6 +6,8 @@ import com.devsuper.users.services.UserService;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
@@ -24,8 +27,15 @@ public class UserResource {
   @Autowired UserService _userService;
 
   @GetMapping
-  public ResponseEntity<List<ClientDTO>> findAll() {
-    return ResponseEntity.ok().body(_userService.findAll());
+  public ResponseEntity<List<ClientDTO>> findAll(
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+      @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
+      @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+
+    PageRequest _page = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+
+    return ResponseEntity.ok().body(_userService.findAllPaged(_page));
   }
 
   @GetMapping(value = "/{id}")

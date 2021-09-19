@@ -23,6 +23,7 @@ public class ClientDTO implements Serializable {
   public ClientDTO() {}
 
   public ClientDTO(User _user) {
+    this.setId(_user.getId());
     this.setBirthDate(_user.getBirthDate());
     this.setChildren(_user.getChildren());
     this.setCpf(_user.getCpf());
