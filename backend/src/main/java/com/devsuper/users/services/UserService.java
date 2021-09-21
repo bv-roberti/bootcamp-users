@@ -21,8 +21,15 @@ public class UserService {
   @Autowired UserRepo _userRepo;
 
   @Transactional(readOnly = true)
-  public Optional<User> findById(Long id) {
-    return _userRepo.findById(id);
+  public ClientDTO findById(Long id) {
+
+    Optional<User> _user = _userRepo.findById(id);
+
+    return new ClientDTO(
+        _user.orElseThrow(
+            () ->
+                new com.devsuper.users.exceptions.EntityNotFoundException(
+                    "Resource not found for Id: " + id)));
   }
 
   @Transactional
